@@ -7,13 +7,13 @@ namespace TicTacToe
     {
         public bool Explored { get; set; }
 
-        public TileContent CurrentTurn { get; set; }
+        public TileContent CurrentTurn { get; }
 
         public int MiniMaxScore { get; set; }
 
         public (int winning, int losing, int draw) SubtreeStats { get; set; }
 
-        public TicTacToeBoard Board { get; set; }
+        public TicTacToeBoard Board { get; }
 
         public List<TicTacToeTreeNode> Children { get; }
 
@@ -25,13 +25,9 @@ namespace TicTacToe
             Children = new List<TicTacToeTreeNode>();
         }
 
-        public TileContent getNextTurnPlayer()
+        public TileContent GetNextTurnPlayer()
         {
-            if (CurrentTurn == TileContent.PlayerOne)
-            {
-                return TileContent.PlayerTwo;
-            }
-            return TileContent.PlayerOne;
+            return CurrentTurn == TileContent.PlayerOne ? TileContent.PlayerTwo : TileContent.PlayerOne;
         }
 
         public bool IsLeaf()

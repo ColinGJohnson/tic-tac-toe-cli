@@ -13,23 +13,23 @@ namespace TicTacToe
 
     public class TicTacToeBoard
     {
-        public readonly TileContent[,] boardRepr;
-        readonly int boardSize = 3;
+        public readonly TileContent[,] BoardRepr;
+        private const int BoardSize = 3;
 
 
         public TicTacToeBoard()
         {
-            boardRepr = new TileContent[boardSize, boardSize];
+            BoardRepr = new TileContent[BoardSize, BoardSize];
         }
 
         public TicTacToeBoard(TileContent[,] board)
         {
-            this.boardRepr = (TileContent[,])board.Clone();
+            this.BoardRepr = (TileContent[,])board.Clone();
         }
 
         public TicTacToeBoard ChangeTile((int row, int column) position, TileContent content)
         {
-            var modifiedBoard = (TileContent[,])boardRepr.Clone();
+            var modifiedBoard = (TileContent[,])BoardRepr.Clone();
             modifiedBoard[position.row, position.column] = content;
             return new TicTacToeBoard(modifiedBoard);
         }
@@ -38,7 +38,7 @@ namespace TicTacToe
         {
             char getChar((int row, int column) position)
             {
-                return boardRepr[position.row, position.column] switch
+                return BoardRepr[position.row, position.column] switch
                 {
                     TileContent.PlayerOne => playerOneChar,
                     TileContent.PlayerTwo => playerTwoChar,
@@ -61,11 +61,11 @@ namespace TicTacToe
         {
             var emptyTiles = new List<(int row, int column)>();
 
-            for (int i = 0; i < boardSize; i++)
+            for (var i = 0; i < BoardSize; i++)
             {
-                for (int j = 0; j < boardSize; j++)
+                for (var j = 0; j < BoardSize; j++)
                 {
-                    if (boardRepr[i, j] == TileContent.Empty)
+                    if (BoardRepr[i, j] == TileContent.Empty)
                     {
                         emptyTiles.Add((i, j));
                     }
@@ -88,18 +88,18 @@ namespace TicTacToe
             }
 
             // horizontal or vertical wins
-            for (int i = 0; i < boardSize; i++)
+            for (var i = 0; i < BoardSize; i++)
             {
-                bool horizontalWin = true;
-                bool verticalWin = true;
+                var horizontalWin = true;
+                var verticalWin = true;
 
-                for (int j = 0; j < boardSize; j++)
+                for (var j = 0; j < BoardSize; j++)
                 {
-                    if (boardRepr[i, j] != player)
+                    if (BoardRepr[i, j] != player)
                     {
                         horizontalWin = false;
                     }
-                    if (boardRepr[j, i] != player)
+                    if (BoardRepr[j, i] != player)
                     {
                         verticalWin = false;
                     }
@@ -112,25 +112,20 @@ namespace TicTacToe
             }
 
             // diagonal
-            bool rightDiagonalWin = true;
-            bool leftDiagonalWin = true;
-            for (int i = 0; i < boardSize; i++)
+            var rightDiagonalWin = true;
+            var leftDiagonalWin = true;
+            for (var i = 0; i < BoardSize; i++)
             {
-                if (boardRepr[i, i] != player)
+                if (BoardRepr[i, i] != player)
                 {
                     rightDiagonalWin = false;
                 }
-                if (boardRepr[i, boardSize - (i + 1)] != player)
+                if (BoardRepr[i, BoardSize - (i + 1)] != player)
                 {
                     leftDiagonalWin = false;
                 }
             }
-            if (rightDiagonalWin || leftDiagonalWin)
-            {
-                return true;
-            }
-
-            return false;
+            return rightDiagonalWin || leftDiagonalWin;
         }
     }
 }

@@ -41,7 +41,7 @@ namespace TicTacToe
         {
             get
             {
-                return moveGraph[GetBoardStateKey(currentBoard.boardRepr, currentPlayer)];
+                return moveGraph[GetBoardStateKey(currentBoard.BoardRepr, currentPlayer)];
             }
         }
 
@@ -87,7 +87,7 @@ namespace TicTacToe
         public void DoComputerMove(BotAlgorithm algorithm)
         {
             // choose randomly among the moves that offer the most wins
-            TicTacToeTreeNode currentNode = moveGraph[GetBoardStateKey(currentBoard.boardRepr, currentPlayer)];
+            var currentNode = moveGraph[GetBoardStateKey(currentBoard.BoardRepr, currentPlayer)];
             TicTacToeTreeNode moveSelection;
             var currentNodeChildren = new List<TicTacToeTreeNode>(currentNode.Children);
 
@@ -156,7 +156,7 @@ namespace TicTacToe
 
             while (moveStack.Count > 0)
             {
-                TicTacToeTreeNode currentNode = moveStack.Peek();
+                var currentNode = moveStack.Peek();
 
                 // if the current node's board is a leaf (contains a win or a draw), record it
                 if (currentNode.Board.CheckWin(TileContent.PlayerOne))
@@ -185,7 +185,7 @@ namespace TicTacToe
                     {
                         // wins/losses/draws
                         (int winning, int losing, int draw) winStats = (0, 0, 0);
-                        foreach (TicTacToeTreeNode node in currentNode.Children)
+                        foreach (var node in currentNode.Children)
                         {
                             winStats.winning += node.SubtreeStats.winning;
                             winStats.losing += node.SubtreeStats.losing;
@@ -194,8 +194,8 @@ namespace TicTacToe
                         currentNode.SubtreeStats = winStats;
 
                         // compute minimax score
-                        int miniMaxEval = currentNode.CurrentTurn == TileContent.PlayerOne ? int.MinValue : int.MaxValue;
-                        foreach (TicTacToeTreeNode childNode in currentNode.Children)
+                        var miniMaxEval = currentNode.CurrentTurn == TileContent.PlayerOne ? int.MinValue : int.MaxValue;
+                        foreach (var childNode in currentNode.Children)
                         {
                             if (currentNode.CurrentTurn == TileContent.PlayerOne)
                             {
@@ -214,7 +214,7 @@ namespace TicTacToe
                     //Console.WriteLine(currentNode.Board.ToAscii('X', 'O'));
 
                     // memoize this node so we don't explore it's subtrees again
-                    memoizedNodes.Add(GetBoardStateKey(currentNode.Board.boardRepr, currentNode.CurrentTurn), currentNode);
+                    memoizedNodes.Add(GetBoardStateKey(currentNode.Board.BoardRepr, currentNode.CurrentTurn), currentNode);
 
                     // pop this node off the stack, since there is nothing else to do with it (it is fully explored)
                     moveStack.Pop();
@@ -223,8 +223,8 @@ namespace TicTacToe
                 {
                     foreach (var emptyPosition in currentNode.Board.GetEmptyTiles())
                     {
-                        TicTacToeBoard nextBoard = currentNode.Board.ChangeTile(emptyPosition, currentNode.CurrentTurn);
-                        var nextBoardKey = GetBoardStateKey(nextBoard.boardRepr, currentNode.getNextTurnPlayer());
+                        var nextBoard = currentNode.Board.ChangeTile(emptyPosition, currentNode.CurrentTurn);
+                        var nextBoardKey = GetBoardStateKey(nextBoard.BoardRepr, currentNode.GetNextTurnPlayer());
 
                         // use a memoized TicTacToeTreeNode if one exists
                         if (memoizedNodes.ContainsKey(nextBoardKey))
@@ -233,7 +233,7 @@ namespace TicTacToe
                         }
                         else
                         {
-                            TicTacToeTreeNode nextNode = new TicTacToeTreeNode(nextBoard, currentNode.getNextTurnPlayer());
+                            var nextNode = new TicTacToeTreeNode(nextBoard, currentNode.GetNextTurnPlayer());
                             currentNode.Children.Add(nextNode);
                             moveStack.Push(nextNode);
                         }

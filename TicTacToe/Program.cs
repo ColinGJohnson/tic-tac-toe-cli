@@ -6,7 +6,7 @@ namespace TicTacToe
 {
     class Program
     {
-        static void Main(string[] args)
+        private static void Main()
         {
             // player chooses which bot they want to play against
             string[] algorithmOptions = {
@@ -16,7 +16,7 @@ namespace TicTacToe
                 "Least loss paths",
                 "Most draw paths"
             };
-            int botAlgorithm = GetPlayerInput("How should the computer play?", algorithmOptions, true);
+            var botAlgorithm = GetPlayerInput("How should the computer play?", algorithmOptions, true);
 
             // player chooses X or O's (first or second)
             char playerOneChar;
@@ -37,13 +37,13 @@ namespace TicTacToe
             }
 
             // keep playing games until the player wants to quit
-            bool keepPlaying = true;
-            int gameCount = 0;
-            int winCount = 0;
-            int drawCount = 0;
+            var keepPlaying = true;
+            var gameCount = 0;
+            var winCount = 0;
+            var drawCount = 0;
             while (keepPlaying)
             {
-                GameStatus status = PlayGame((BotAlgorithm)botAlgorithm, playerOneChar, playerTwoChar, startingPlayer);
+                var status = PlayGame((BotAlgorithm)botAlgorithm, playerOneChar, playerTwoChar, startingPlayer);
                 gameCount++;
                 if (status == GameStatus.WIN)
                 {
@@ -54,7 +54,7 @@ namespace TicTacToe
                     drawCount++;
                 }
 
-                string winStats = $"You have played {gameCount} games against the \"{Enum.GetName((BotAlgorithm)botAlgorithm)}\" bot with {winCount} wins and {drawCount} draws.";
+                var winStats = $"You have played {gameCount} games against the \"{Enum.GetName((BotAlgorithm)botAlgorithm)}\" bot with {winCount} wins and {drawCount} draws.";
                 string[] gameEndOptions = { "Play again", "Quit" };
                 keepPlaying = GetPlayerInput($"{winStats}\nDo you want to play another game?", gameEndOptions) == 0;
             }
@@ -74,7 +74,7 @@ namespace TicTacToe
                 if (game.currentPlayer == TileContent.PlayerOne)
                 {
                     Console.Clear();
-                    Console.WriteLine($"Computer Move:");
+                    Console.WriteLine("Computer Move:");
                     Console.WriteLine(game.currentBoard.ToAscii(playerOneChar, playerTwoChar));
                     Thread.Sleep(1000);
 
@@ -92,9 +92,9 @@ namespace TicTacToe
                     Console.WriteLine(game.currentBoard.ToAscii(playerOneChar, playerTwoChar));
 
                     // let the player select a move
-                    List<(int row, int column)> emptyTiles = game.currentBoard.GetEmptyTiles();
-                    List<string> moveOptions = emptyTiles.ConvertAll(x => x.ToString());
-                    int selection = GetPlayerInput("Choose a move from the following. (row, column)", moveOptions);
+                    var emptyTiles = game.currentBoard.GetEmptyTiles();
+                    var moveOptions = emptyTiles.ConvertAll(x => x.ToString());
+                    var selection = GetPlayerInput("Choose a move from the following. (row, column)", moveOptions);
                     var selectedMove = emptyTiles[selection];
 
                     game.DoPlayerMove(selectedMove);
@@ -133,27 +133,25 @@ namespace TicTacToe
                     Console.Clear();
                 }
                 Console.WriteLine(message);
-                for (int i = 0; i < options.Count; i++)
+                for (var i = 0; i < options.Count; i++)
                 {
                     Console.WriteLine($"{i + 1}. {options[i]}");
                 }
                 Console.Write("Enter a number: ");
-                string input = Console.ReadLine();
-                bool success = int.TryParse(input, out int inputNumber);
+                var input = Console.ReadLine();
+                var success = int.TryParse(input, out var inputNumber);
                 if (success && inputNumber > 0 && inputNumber <= options.Count)
                 {
                     return inputNumber - 1;
                 }
-                else
-                {
-                    Console.WriteLine("Invalid option, select one of the following by typing a number and pressing enter.");
-                }
+
+                Console.WriteLine("Invalid option, select one of the following by typing a number and pressing enter.");
             }
         }
 
         static void PrintSplashAscii()
         {
-            string ascii = System.IO.File.ReadAllText(@"");
+            var ascii = System.IO.File.ReadAllText(@"");
             Console.WriteLine(ascii);
         }
     }
